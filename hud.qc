@@ -264,8 +264,13 @@ void Hud_DrawCurrentAmmoIcon(vector pos)
 		drawpic(pos, "sb_shellsb", '24 24', '1 1 1', 1, 0);
 	else if (stat_items & IT_NAILS)
 		drawpic(pos, "sb_nailsb", '24 24', '1 1 1', 1, 0);
-	else if (stat_items & IT_ROCKETS)
-		drawpic(pos, "sb_rocketb", '24 24', '1 1 1', 1, 0);
+	else if (stat_items & IT_ROCKETS) {
+        if (getstatf(STAT_ACTIVEWEAPON) == IT_ROCKET_LAUNCHER && (stat_items & IT_DRILLER)) {
+            drawpic(pos, "sb_drillb", '24 24', '1 1 1', 1, 0);
+        } else {
+            drawpic(pos, "sb_rocketb", '24 24', '1 1 1', 1, 0);
+        }
+    }
 	else if (stat_items & IT_CELLS)
 		drawpic(pos, "sb_cellsb", '24 24', '1 1 1', 1, 0);
 }
@@ -984,6 +989,7 @@ void() Hud_Init
 	precache_pic("sb_nailsb", TRUE);
 	precache_pic("sb_shellsb", TRUE);
 	precache_pic("sb_rocketb", TRUE);
+	precache_pic("sb_drillb", TRUE);
 	
 	precache_pic("sb_teams", TRUE);
 	

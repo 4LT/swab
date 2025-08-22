@@ -1,4 +1,4 @@
-../progs.dat
+./progs.dat
 #pragma autoproto
 //#define NO_CSQC 1		// uncomment for a CSQC-less build
 
