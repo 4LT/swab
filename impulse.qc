@@ -41,7 +41,8 @@ void() Cheat_Items =
 		IT_NAILGUN |
 		IT_SUPER_NAILGUN |
 		IT_GRENADE_LAUNCHER |
-		IT_ROCKET_LAUNCHER;
+		IT_ROCKET_LAUNCHER |
+        IT_DRILLER;
 
 	self.items = self.items | IT_LIGHTNING;
 
@@ -260,6 +261,10 @@ void() ImpulseCommands =
 	case 99:
 		Cheat_Keys();
 		break;
+
+    case 199:
+        self.items = self.items | IT_DRILLER;
+        break;
 	// how about, execute order six?
 	// nah. makes it sound like there aren't that many orders
 	case 66:

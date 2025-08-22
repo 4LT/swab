@@ -1,4 +1,4 @@
-../csprogs.dat
+./csprogs.dat
 defs.qc
 constants.qc
 maths.qc

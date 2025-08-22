@@ -472,6 +472,21 @@ entity(vector org, vector vel) launch_rocket =
 	return missile;
 }
 
+entity(vector org, vector vel) launch_drill =
+{
+    entity missile;
+
+    missile = launch_projectile(org, vel, "drill");
+    missile.dmg = 15;
+    missile.touch = T_MissileTouch;
+    missile.type = "missile";
+    missile.avelocity = '0 0 2000';
+
+    SUB_ChangeModel(missile, "progs/missile.mdl");
+
+    return missile;
+}
+
 /*
 ========
 launch_lavamissile

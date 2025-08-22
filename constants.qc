@@ -145,6 +145,7 @@ const float	IT_ARMOR1				= 8192;
 const float	IT_ARMOR2				= 16384;
 const float	IT_ARMOR3				= 32768;
 //float	IT_SUPERHEALTH			= 65536;	// never gets used now, but the .exe expects the following flags
+const float IT_DRILLER              = 65536;
 
 const float	IT_KEY1					= 131072;
 const float	IT_KEY2					= 262144;

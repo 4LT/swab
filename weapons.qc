@@ -28,6 +28,8 @@ void() W_Precache =
 	precache_model ("progs/lavaball.mdl");	
 	precache_sound ("weapons/lhit.wav");		//lightning
 	precache_sound ("weapons/lstart.wav");		//lightning start
+    precache_sound("drill/shot.wav");
+    precache_sound("drill/loop.wav");
 //	precache_sound ("items/damage3.wav");
 
 // ax sounds	
