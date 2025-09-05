@@ -36,7 +36,7 @@ def getQCs():
 
 def go():
 	cwd = os.path.dirname(os.path.realpath(__file__))
-	fgdDir = os.path.normpath(os.path.join(cwd, ".."))
+	fgdDir = os.path.normpath(cwd)
 	fgdName = ""
 	if len(sys.argv) > 1:
 		fgdName = sys.argv[1]

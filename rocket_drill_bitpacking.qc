@@ -11,6 +11,14 @@ float(float ammo_rockets) get_drills = {
     return (ammo_rockets & DRILL_MASK) / DRILL_SHIFT_POW;
 }
 
+float(float ammo_rockets, float rockets) set_rockets = {
+    return (ammo_rockets & ~ROCKET_MASK) | (rockets & ROCKET_MASK);
+}
+
+float(float ammo_rockets, float drills) set_drills = {
+    return (ammo_rockets & ~DRILL_MASK) | ((drills * DRILL_SHIFT_POW) & DRILL_MASK);
+}
+
 static float(float rockets, float drills) merge_rockets_drills_unchecked = {
     return (drills * DRILL_SHIFT_POW) | rockets;
 }

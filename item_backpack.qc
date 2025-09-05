@@ -37,6 +37,7 @@ BackpackTouch
 */
 void() BackpackTouch =
 {
+    float rockets, drills;
 	if (!CheckValidTouch()) return;
 
 	// coop 1: players can only pick up their own backpacks
@@ -50,9 +51,12 @@ void() BackpackTouch =
 
 	float acount;
 	
+    rockets = get_rockets(self.ammo_rockets);
+    drills = get_drills(self.ammo_rockets);
+
 	other.ammo_shells = other.ammo_shells + self.ammo_shells;
 	other.ammo_nails = other.ammo_nails + self.ammo_nails;
-	other.ammo_rockets = other.ammo_rockets + self.ammo_rockets;
+	other.ammo_rockets = add_rockets_drills(other.ammo_rockets, rockets, drills);
 	other.ammo_cells = other.ammo_cells + self.ammo_cells;
 	bound_ammo(other);
 	armor_give(other, self.armorvalue, 0, FALSE);	
@@ -89,12 +93,17 @@ void() BackpackTouch =
 		acount = 2;
 		print_quant(self.ammo_nails, "nail", other);
 	}
-	if (self.ammo_rockets)
+	if (rockets)
 	{
 		if (acount) sprint(other, ", ");
 		acount = 2;
-		print_quant(self.ammo_rockets, "rocket", other);
+		print_quant(rockets, "rocket", other);
 	}
+    if (drills) {
+        if (acount) sprint(other, ", ");
+        acount = 2;
+        print_quant(drills, "drill", other);
+    }
 	if (self.ammo_cells)
 	{
 		if (acount) sprint(other, ", ");
@@ -129,6 +138,14 @@ void() BackpackTouch =
 	ItemTouched();
 }
 
+static float() random_explosives = {
+    if (random() < 0.5) {
+        return 2;
+    } else {
+        return set_drills(0, 2);
+    }
+}
+
 /*
 ================================
 BackpackAutoTouch
@@ -140,12 +157,19 @@ since they're little exploration rewards for hiding behind crates and etc
 */
 void() BackpackAutoTouch =
 {
+    float o_rockets, o_drills, s_rockets, s_drills;
+
 	if (!CheckValidTouch()) return;
 
 	if (self.spawnflags & 1)
 		sprint (other, "You found a big backpack!\n");
 	else
 		sprint (other, "You found a backpack\n");
+
+    o_rockets = get_rockets(other.ammo_rockets);
+    o_drills = get_drills(other.ammo_rockets);
+    s_rockets = get_rockets(self.ammo_rockets);
+    s_drills = get_drills(self.ammo_rockets);
 		
 	if (other.ammo_shells + self.ammo_shells > MAX_AMMO_SHELLS)
 	{
@@ -157,10 +181,19 @@ void() BackpackAutoTouch =
 		self.armorvalue += ceil((other.ammo_nails + self.ammo_nails - MAX_AMMO_NAILS) / 2);
 		self.ammo_nails = MAX_AMMO_NAILS - other.ammo_nails;
 	}
-	if (other.ammo_rockets + self.ammo_rockets > MAX_AMMO_ROCKETS)
+	if (o_rockets + s_rockets > MAX_AMMO_ROCKETS)
 	{
-		self.armorvalue += (other.ammo_rockets + self.ammo_rockets - MAX_AMMO_ROCKETS) * 3;
-		self.ammo_rockets = MAX_AMMO_ROCKETS - other.ammo_rockets;
+		self.armorvalue += (other.ammo_rockets + s_rockets - MAX_AMMO_ROCKETS) * 3;
+		self.ammo_rockets = set_rockets(
+            self.ammo_rockets, MAX_AMMO_ROCKETS - o_rockets
+        );
+	}
+	if (o_drills + s_drills > MAX_AMMO_ROCKETS)
+	{
+		self.armorvalue += (other.ammo_rockets + s_drills - MAX_AMMO_ROCKETS) * 3;
+		self.ammo_rockets = set_drills(
+            self.ammo_rockets, MAX_AMMO_ROCKETS - o_drills
+        );
 	}
 	if (other.ammo_cells + self.ammo_cells > MAX_AMMO_CELLS)
 	{
@@ -181,7 +214,7 @@ void() BackpackAutoTouch =
 			self.ammo_shells *= 2;
 			self.ammo_nails *= 2;
 			
-			self.ammo_rockets = 2;
+			self.ammo_rockets = random_explosives();
 			self.ammo_cells = 3;
 			self.skin = 2;
 		}
@@ -193,7 +226,7 @@ void() BackpackAutoTouch =
 A forgotten explorer's backpack. Grants a paltry sum of shells and nails (about half a small pack of each). Grants armor instead of any ammo the player already has maxed.
 
 Flags:
-"big" doubles shells and nails, adds 2 rockets and 4 cells, appears red
+"big" doubles shells and nails, adds 2 rockets or drills, and 4 cells, appears red
     
 Keys:
 "target/2/3/4/k" - entity to trigger when picked up
@@ -208,7 +241,7 @@ Keys:
 "A forgotten explorer's backpack. Grants a paltry sum of shells and nails (about half a small pack of each). Grants armor instead of any ammo the player already has maxed."
 [
 	spawnflags(flags) =	[
-		1 : "Big (2x, red, +2 rockets/4 cells)" : 0
+		1 : "Big (2x, red, +2 explosives/4 cells)" : 0
 	]
 ]
 */
@@ -230,7 +263,7 @@ void() item_backpack =
 		self.ammo_shells *= 2;
 		self.ammo_nails *= 2;
 		
-		self.ammo_rockets = 2;
+		self.ammo_rockets = random_explosives();
 		self.ammo_cells = 3;
 		self.skin = 2;
 	}

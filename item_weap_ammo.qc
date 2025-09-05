@@ -509,10 +509,10 @@ void() item_spikes =
 }
 
 /*QUAKED item_rockets (0 .5 .5) (0 0 0) (32 32 32) BIG ? SUSPENDED
-3 ammo points (rockets) for the Rocket/Grenade Launcher.
+4 ammo points (rockets) for the Rocket/Grenade Launcher.
 
 Flags:
-"big" gives 6 instead of 3
+"big" gives 8 instead of 4
     
 Keys:
 "target/2/3/4/k" - entity to trigger when picked up
@@ -550,19 +550,41 @@ void() item_rockets =
 	StartAmmo();
 }
 
+/*QUAKED item_drills (0 .5 .5) (0 0 0) (32 32 32) BIG ? SUSPENDED
+4 drills for the Rocket Launcher.
+
+Flags:
+"big" gives 8 instead of 4
+    
+Keys:
+"target/2/3/4/k" - entity to trigger when picked up
+"targetname" - will not spawn until triggered
+"wait" - will respawn after 'wait' seconds. fires targets every time.
+"count" - limit number of times to respawn
+*/
+/*FGD
+@PointClass base(Ammo) 
+    model(
+        {{
+            spawnflags & 1 ->   ":maps/b_rock1.bsp",
+                                ":maps/b_rock0.bsp"
+        }}
+    ) =
+    item_drills : "Drills, 4/8" []
+*/
 void() item_drills =
 {
 	if (!SUB_ShouldSpawn()) return;
 	if (self.spawnflags & ITEM_AMMO_BIG)
 	{
-		self.ammo_rockets = add_rockets_drills(0, 0, 8);
+		self.ammo_rockets = set_drills(0, 8);
         // TODO: Set to new model
 		precache_model_safe ("progs/m_rock2.mdl");
 		setmodel (self, "progs/m_rock2.mdl");
 	}
 	else
 	{
-		self.ammo_rockets = add_rockets_drills(0, 0, 4);
+		self.ammo_rockets = set_drills(0, 4);
         // TODO: Set to new model
 		precache_model_safe ("progs/m_rock1.mdl");
 		setmodel (self, "progs/m_rock1.mdl");
