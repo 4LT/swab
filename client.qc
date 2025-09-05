@@ -26,7 +26,12 @@ void() SetChangeParms =
 		IT_KEY1 | IT_KEY2 | 
 		IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD
 		) );
-	
+
+    // cache CFL_DACTIVE state in items
+    if (self.customflags & CFL_DACTIVE) {
+        self.items = self.items | IT_DRILLS;
+    }
+
 	// gung-ho players can run forward and grab weapons before other clients have
 	// finished connecting, causing them to miss out on the global distribution
 	// of that weapon in coop 1. since players can't actually have differing
@@ -110,6 +115,14 @@ void() DecodeLevelParms =
 		SetNewParms ();		// take away all stuff on starting new episode
 	
 	self.items = parm1;
+
+    // load cached CFL_DACTIVE state, reset IT_DRILLS (it'll reset if rocket
+    // launcher is current weapon by W_Select)
+    if (self.items | IT_DRILLS) {
+        self.customflags|= CFL_DACTIVE;
+        self.items-= IT_DRILLS;
+    }
+
 	self.health = parm2;
 	self.armorvalue = parm3;
 	self.ammo_shells = parm4;
