@@ -1474,6 +1474,8 @@ Called every frame before physics are run
 */
 void() PlayerPreThink =
 {
+    float rockets, drills;
+
 	if (initCleanup)
 	{
 		fog_setFromEnt( self, self );
@@ -1526,11 +1528,23 @@ void() PlayerPreThink =
 	if (time < self.pausetime)
 		self.velocity = '0 0 0';
 
-	if(time > self.attack_finished && 
+    if (
+        time > self.attack_finished &&
+        self.weapon == IT_ROCKET_LAUNCHER
+    ) {
+        rockets = get_rockets(self.ammo_rockets);
+        drills = get_drills(self.ammo_rockets);
+
+        if ((drills > 0) != (rockets > 0)) {
+            W_Select(IT_ROCKET_LAUNCHER);
+        }
+    }
+    
+    if (
+        time > self.attack_finished && 
 		!W_HasAmmo(self.weapon) && 
 		self.weapon != IT_AXE
-		)
-	{
+    ) {
 		W_SelectBestWeapon();
 	}
 

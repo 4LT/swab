@@ -13,7 +13,7 @@ void(entity e) bound_ammo =
 {
 	e.ammo_shells = min(e.ammo_shells, MAX_AMMO_SHELLS);
 	e.ammo_nails = min(e.ammo_nails, MAX_AMMO_NAILS);
-	e.ammo_rockets = min(e.ammo_rockets, MAX_AMMO_ROCKETS);
+    e.ammo_rockets = limit_rockets_drills(e.ammo_rockets);
 	e.ammo_cells = min(e.ammo_cells, MAX_AMMO_CELLS);
 }
 
@@ -39,7 +39,10 @@ void(entity to) weapon_give =
 	to.items |= self.items;
 	to.ammo_shells += self.ammo_shells;
 	to.ammo_nails += self.ammo_nails;
-	to.ammo_rockets += self.ammo_rockets;
+    to.ammo_rockets = combine_rockets_drills(
+        to.ammo_rockets,
+        self.ammo_rockets
+    );
 	to.ammo_cells += self.ammo_cells;
 		
 	bound_ammo(to);
@@ -331,7 +334,12 @@ ammo_touch
 */
 void() ammo_touch =
 {
+    float rockets, drills;
+
 	if (!CheckValidTouch()) return;
+
+    rockets = get_rockets(self.ammo_rockets);
+    drills = get_drills(self.ammo_rockets);
 
 	// structured in dual if's instead of using && to preserve ammo_touch maphacks
 	if (self.ammo_shells)
@@ -346,11 +354,29 @@ void() ammo_touch =
 			other.ammo_nails += self.ammo_nails;
 		else return;
 	}
-	else if (self.ammo_rockets)
+	else if (rockets)
 	{
-		if (other.ammo_rockets < MAX_AMMO_ROCKETS)
-			other.ammo_rockets += self.ammo_rockets;
-		else return;
+		if (get_rockets(other.ammo_rockets) < MAX_AMMO_ROCKETS) {
+			other.ammo_rockets = add_rockets_drills(
+                other.ammo_rockets,
+                rockets,
+                0
+            );
+        } else {
+            return;
+        }
+	}
+	else if (drills)
+	{
+		if (get_drills(other.ammo_rockets) < MAX_AMMO_ROCKETS) {
+			other.ammo_rockets = add_rockets_drills(
+                other.ammo_rockets,
+                0,
+                drills
+            );
+        } else {
+            return;
+        }
 	}
 	else if (self.ammo_cells)
 	{
@@ -521,6 +547,28 @@ void() item_rockets =
 	}
 	self.weapon = 3;
 	self.netname = "rockets";
+	StartAmmo();
+}
+
+void() item_drills =
+{
+	if (!SUB_ShouldSpawn()) return;
+	if (self.spawnflags & ITEM_AMMO_BIG)
+	{
+		self.ammo_rockets = add_rockets_drills(0, 0, 8);
+        // TODO: Set to new model
+		precache_model_safe ("progs/m_rock2.mdl");
+		setmodel (self, "progs/m_rock2.mdl");
+	}
+	else
+	{
+		self.ammo_rockets = add_rockets_drills(0, 0, 4);
+        // TODO: Set to new model
+		precache_model_safe ("progs/m_rock1.mdl");
+		setmodel (self, "progs/m_rock1.mdl");
+	}
+	self.weapon = 3;
+	self.netname = "drill rockets";
 	StartAmmo();
 }
 

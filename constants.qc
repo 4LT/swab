@@ -39,6 +39,7 @@ const float	CFL_LIQUID_IMMUNE	= 512;	// monster spawned touching slime or lava, 
 const float	CFL_MELEEONLY		= 1024;	// has no ranged attack (monster)
 const float	CFL_LIMBO			= 2048;	// waiting in teleport limbo (coop, player)
 const float	CFL_OMNIVISION		= 4096;	// eyes in back of head
+const float CFL_DACTIVE         = 8192; // driller active
 // serverflags
 const float	SVFL_EPISODE1		= 1;
 const float	SVFL_EPISODE2		= 2;
@@ -145,7 +146,7 @@ const float	IT_ARMOR1				= 8192;
 const float	IT_ARMOR2				= 16384;
 const float	IT_ARMOR3				= 32768;
 //float	IT_SUPERHEALTH			= 65536;	// never gets used now, but the .exe expects the following flags
-const float IT_DRILLER              = 65536;
+const float IT_DRILLS              = 65536;
 
 const float	IT_KEY1					= 131072;
 const float	IT_KEY2					= 262144;
@@ -319,7 +320,7 @@ const float	DEBUG_DMG_PER_CELL		= 30;
 
 const float	MAX_AMMO_SHELLS			= 100;
 const float	MAX_AMMO_NAILS			= 200;
-const float	MAX_AMMO_ROCKETS		= 100;
+const float	MAX_AMMO_ROCKETS		= 70;
 const float	MAX_AMMO_CELLS			= 100;
 
 //================================================

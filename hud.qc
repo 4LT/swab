@@ -163,11 +163,28 @@ void(vector pos, float value, float threshhold, float left = FALSE, float zeropa
 void(float type, vector pos) Hud_DrawAmmoCount =
 {
 	string s;
-	float value;
+	float value, variant_;
 	float len;
 	float c;
-	value = clampf(getstati(STAT_SHELLS + type),999);
 
+    variant_ = 0;
+
+    if (type > 3) {
+        type-= 4;
+        variant_ = 1;
+    }
+
+    if (type == 2) {
+        if (variant_ == 0) {
+            value = get_rockets(getstati(STAT_ROCKETS));
+        } else {
+            value = get_drills(getstati(STAT_ROCKETS));
+        }
+    } else {
+        value = getstati(STAT_SHELLS + type);
+    }
+
+	value = clampf(value, 999);
 	s = ftos(floor(value));
 	len = strlen(s);
 
@@ -264,13 +281,10 @@ void Hud_DrawCurrentAmmoIcon(vector pos)
 		drawpic(pos, "sb_shellsb", '24 24', '1 1 1', 1, 0);
 	else if (stat_items & IT_NAILS)
 		drawpic(pos, "sb_nailsb", '24 24', '1 1 1', 1, 0);
-	else if (stat_items & IT_ROCKETS) {
-        if (getstatf(STAT_ACTIVEWEAPON) == IT_ROCKET_LAUNCHER && (stat_items & IT_DRILLER)) {
-            drawpic(pos, "sb_drillb", '24 24', '1 1 1', 1, 0);
-        } else {
-            drawpic(pos, "sb_rocketb", '24 24', '1 1 1', 1, 0);
-        }
-    }
+	else if (stat_items & IT_ROCKETS)
+        drawpic(pos, "sb_rocketb", '24 24', '1 1 1', 1, 0);
+    else if (stat_items & IT_DRILLS)
+        drawpic(pos, "sb_drillb", '24 24', '1 1 1', 1, 0);
 	else if (stat_items & IT_CELLS)
 		drawpic(pos, "sb_cellsb", '24 24', '1 1 1', 1, 0);
 }
@@ -505,14 +519,16 @@ void Hud_DrawIBar(vector pos)
 		drawpic(pos + '32 0',  "sb_ammos", '12 12', '1 1 1', 1, 0);
 		drawpic(pos + '80 0',  "sb_ammon", '12 12', '1 1 1', 1, 0);
 		drawpic(pos + '128 0', "sb_ammor", '12 12', '1 1 1', 1, 0);
-		drawpic(pos + '176 0', "sb_ammoc", '12 12', '1 1 1', 1, 0);
+        drawpic(pos + '176 0', "sb_ammod", '12 12', '1 1 1', 1, 0);
+		drawpic(pos + '224 0', "sb_ammoc", '12 12', '1 1 1', 1, 0);
 	}
 	drawpic(pos, "ibar", '320 24', '1 1 1', baralpha, 0);
 	
 	Hud_DrawAmmoCount(0, pos + '10 0');
 	Hud_DrawAmmoCount(1, pos + '58 0');
 	Hud_DrawAmmoCount(2, pos + '106 0');
-	Hud_DrawAmmoCount(3, pos + '154 0');
+	Hud_DrawAmmoCount(6, pos + '154 0');
+	Hud_DrawAmmoCount(3, pos + '202 0');
 
 	Hud_DrawIBarWeapons(pos);
 	Hud_DrawKeys(pos + '192 8', IT_KEY1);
@@ -548,10 +564,36 @@ void Hud_DrawAmmo2(vector pos)
 	{
 		// put these behind the solid bar bc they have an outline
 		drawpic(pos + '32 0', "sb_ammor", '12 12', '1 1 1', 1, 0);
-		drawpic(pos + '80 0', "sb_ammoc", '12 12', '1 1 1', 1, 0);
+		drawpic(pos + '80 0', "sb_ammod", '12 12', '1 1 1', 1, 0);
+		drawpic(pos + '128 0', "sb_ammoc", '12 12', '1 1 1', 1, 0);
+	}
+	drawsubpic(pos, '144 10', "ibar", '0.3 0', '0.45 0.4166666666666', '1 1 1', baralpha);
+	Hud_DrawAmmoCount(2, pos + '10 0');
+	Hud_DrawAmmoCount(6, pos + '58 0');
+	Hud_DrawAmmoCount(3, pos + '106 0');
+}
+
+void Hud_DrawAmmo3(vector pos)
+{
+	if (baralpha < 1.0)
+	{
+		// put these behind the solid bar bc they have an outline
+		drawpic(pos + '32 0', "sb_ammor", '12 12', '1 1 1', 1, 0);
+		drawpic(pos + '80 0', "sb_ammod", '12 12', '1 1 1', 1, 0);
 	}
 	drawsubpic(pos, '96 10', "ibar", '0.3 0', '0.3 0.416666666666666', '1 1 1', baralpha);
 	Hud_DrawAmmoCount(2, pos + '10 0');
+	Hud_DrawAmmoCount(6, pos + '58 0');
+}
+
+void Hud_DrawAmmo4(vector pos)
+{
+	if (baralpha < 1.0)
+	{
+		// put these behind the solid bar bc they have an outline
+		drawpic(pos + '80 0', "sb_ammoc", '12 12', '1 1 1', 1, 0);
+	}
+	drawsubpic(pos + '48 0', '48 10', "ibar", '0.6 0', '0.15 0.416666666666666', '1 1 1', baralpha);
 	Hud_DrawAmmoCount(3, pos + '58 0');
 }
 
@@ -612,8 +654,9 @@ void Hud_DrawModernRight(vector pos, float expanded)
 	pos += '0 -26';
 	if (hudstyle == 2)
 	{	
-		Hud_DrawAmmo1(pos + '-96 -20');
-		Hud_DrawAmmo2(pos + '-96 -10');
+		Hud_DrawAmmo1(pos + '-96 -30');
+		Hud_DrawAmmo3(pos + '-96 -20');
+		Hud_DrawAmmo4(pos + '-96 -10');
 		pos += '0 -24';
 	}
 	
@@ -654,8 +697,8 @@ void Hud_DrawModernCenter(vector pos, float expanded)
 	
 	if (hudstyle == 1 && expanded)
 	{	
-		Hud_DrawAmmo1(pos + '-96 -10');
-		Hud_DrawAmmo2(pos + '0 -10');
+		Hud_DrawAmmo1(pos + '-120 -10');
+		Hud_DrawAmmo2(pos + '-24 -10');
 	}
 }
 
@@ -984,6 +1027,7 @@ void() Hud_Init
 	precache_pic("sb_ammoc", TRUE);
 	precache_pic("sb_ammon", TRUE);
 	precache_pic("sb_ammor", TRUE);
+	precache_pic("sb_ammod", TRUE);
 	
 	precache_pic("sb_cellsb", TRUE);
 	precache_pic("sb_nailsb", TRUE);

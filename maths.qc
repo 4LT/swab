@@ -353,7 +353,7 @@ vector(vector incident, vector normal, float dampening) reflect = {
 	vector reflected = incident + 2 * i2p;
 
 	return reflected - d * dampening * normal;
-};
+}
 
 vector(vector v1, vector v2) cwisemul = {
     vector out;

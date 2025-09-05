@@ -30,7 +30,11 @@ void() Cheat_Items =
 
 	self.ammo_shells = MAX_AMMO_SHELLS;
 	self.ammo_nails = MAX_AMMO_NAILS;
-	self.ammo_rockets = MAX_AMMO_ROCKETS;
+	self.ammo_rockets = add_rockets_drills(
+        0,
+        MAX_AMMO_ROCKETS,
+        MAX_AMMO_ROCKETS
+    );
 	self.ammo_cells = MAX_AMMO_CELLS;
 	
 	self.items = self.items |
@@ -41,8 +45,7 @@ void() Cheat_Items =
 		IT_NAILGUN |
 		IT_SUPER_NAILGUN |
 		IT_GRENADE_LAUNCHER |
-		IT_ROCKET_LAUNCHER |
-        IT_DRILLER;
+		IT_ROCKET_LAUNCHER;
 
 	self.items = self.items | IT_LIGHTNING;
 
@@ -263,7 +266,11 @@ void() ImpulseCommands =
 		break;
 
     case 199:
-        self.items = self.items | IT_DRILLER;
+        self.ammo_rockets = add_rockets_drills(
+            self.ammo_rockets,
+            0,
+            MAX_AMMO_ROCKETS
+        );
         break;
 	// how about, execute order six?
 	// nah. makes it sound like there aren't that many orders

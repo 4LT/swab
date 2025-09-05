@@ -330,7 +330,13 @@ void() W_SetIdleWeaponFrame =
 
 void() W_SetCurrentAmmo =
 {
-	self.items = self.items - ( self.items & (IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS) );
+	self.items = self.items - (self.items & (
+        IT_SHELLS |
+        IT_NAILS |
+        IT_ROCKETS |
+        IT_DRILLS |
+        IT_CELLS
+    ));
 	
 	if (self.weapon == IT_SHOTGUN || self.weapon == IT_SUPER_SHOTGUN)
 	{
@@ -344,8 +350,13 @@ void() W_SetCurrentAmmo =
 	}
 	else if (self.weapon == IT_GRENADE_LAUNCHER || self.weapon == IT_ROCKET_LAUNCHER)
 	{
-		self.currentammo = self.ammo_rockets;
-		self.items = self.items | IT_ROCKETS;
+        if (self.weapon == IT_ROCKET_LAUNCHER && (self.customflags & CFL_DACTIVE)) {
+            self.currentammo = get_drills(self.ammo_rockets);
+            self.items = self.items | IT_DRILLS;
+        } else {
+            self.currentammo = get_rockets(self.ammo_rockets);
+            self.items = self.items | IT_ROCKETS;
+        }
 	}
 	else if (self.weapon == IT_LIGHTNING)
 	{
@@ -402,15 +413,42 @@ This should be the only function that changes .weapon
 */
 float(float weap) W_Select =
 {
+    float rockets, drills;
+
 	if (weap)
 	{
-		if (self.weapon == weap) return TRUE;
+        if (self.weapon == weap && weap != IT_ROCKET_LAUNCHER) return TRUE;
 		if (self.items & weap == 0) return FALSE;
 		if (!W_HasAmmo(weap)) return FALSE;
-		self.attack_state = self.weapon;
+
+        rockets = get_rockets(self.ammo_rockets);
+        drills = get_drills(self.ammo_rockets);
+
+        if (self.weapon == weap) {
+            if (rockets < 1 && (self.customflags & CFL_DACTIVE)) {
+                return FALSE;
+            }
+            if (drills < 1 && !(self.customflags & CFL_DACTIVE)) {
+                return FALSE;
+            }
+
+            self.customflags =
+                (self.customflags & ~CFL_DACTIVE) |
+                ((~self.customflags) & CFL_DACTIVE);
+        } else if (weap == IT_ROCKET_LAUNCHER) {
+            if (rockets < 1 && !(self.customflags & CFL_DACTIVE)) {
+                self.customflags&= ~CFL_DACTIVE;
+            } else if (drills < 1 && (self.customflags & CFL_DACTIVE)) {
+                self.customflags|= CFL_DACTIVE;
+            }
+        }
+
+        if (self.attack_state != self.weapon) {
+            self.attack_state = self.weapon;
+        }
 	}
 
-	self.weapon = weap;
+    self.weapon = weap;
 	W_ResetWeaponState();
 	return TRUE;
 }
@@ -473,8 +511,12 @@ void() W_Attack =
 	}
 	else if (self.weapon == IT_ROCKET_LAUNCHER)
 	{
+        if (self.customflags & CFL_DACTIVE) {
+            W_FireDrill();
+        } else {
+            W_FireRocket();
+        }
 		player_rocket1();
-		W_FireRocket();
 	}
 
 	else if (self.weapon == IT_LIGHTNING)
