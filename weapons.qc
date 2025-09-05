@@ -432,9 +432,7 @@ float(float weap) W_Select =
                 return FALSE;
             }
 
-            self.customflags =
-                (self.customflags & ~CFL_DACTIVE) |
-                ((~self.customflags) & CFL_DACTIVE);
+            self.customflags = self.customflags ^ CFL_DACTIVE;
         } else if (weap == IT_ROCKET_LAUNCHER) {
             if (rockets < 1 && !(self.customflags & CFL_DACTIVE)) {
                 self.customflags&= ~CFL_DACTIVE;
