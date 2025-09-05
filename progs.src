@@ -10,9 +10,12 @@ utility.qc
 subs.qc
 subs_move.qc
 subs_tgt.qc
+
 ai.qc
 meat.qc		// gibs and gore
 combat.qc	// fight.qc decrufted away
+
+rocket_drill_bitpacking.qc
 
 items.qc
 item_health_armor.qc

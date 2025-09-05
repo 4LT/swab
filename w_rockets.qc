@@ -180,22 +180,38 @@ player rocket launch inherited from generic launch_rocket
 */
 void() W_FireRocket =
 {
-	local vector loc;
+	vector loc;
 	
-	self.currentammo = self.ammo_rockets = self.ammo_rockets - 1;
+	self.ammo_rockets = add_rockets_drills(
+        self.ammo_rockets,
+        -1,
+        0
+    );
+    self.currentammo = get_rockets(self.ammo_rockets);
 	self.punchangle_x = -2;
 	
 	makevectors (self.v_angle);
 	loc = self.origin + v_forward * 8 + '0 0 16';
-	
-    if (self.items & IT_DRILLER) {
-        sound (self, CHAN_WEAPON, "drill/shot.wav", 1, ATTN_NORM);
-        launch_drill(loc, v_forward * 1000);
-    } else {
-        sound (self, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
-        launch_rocket( loc, v_forward * 1000 );
-    }
+    sound (self, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
+    launch_rocket( loc, v_forward * 1000 );
+	self.attack_finished = time + 0.8;
+}
 
+void() W_FireDrill = {
+	vector loc;
+	
+	self.ammo_rockets = add_rockets_drills(
+        self.ammo_rockets,
+        0,
+        -1
+    );
+    self.currentammo = get_drills(self.ammo_rockets);
+	self.punchangle_x = -2;
+	
+	makevectors (self.v_angle);
+	loc = self.origin + v_forward * 8 + '0 0 16';
+    sound (self, CHAN_WEAPON, "drill/shot.wav", 1, ATTN_NORM);
+    launch_drill(loc, v_forward * 1000);
 	self.attack_finished = time + 0.8;
 }
 
