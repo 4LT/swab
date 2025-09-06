@@ -104,16 +104,14 @@ void() T_DrillTouch = {
 }
 
 void() DrillThink = {
-    vector norm, relpos, vel;
+    vector norm, vel;
     float dmg;
     
     self.count-= 1;
     DrillOffsetPosition();
     norm = normalize(self.origin - center(self.buddy));
 
-    // if even, deal damage
-    if ((!(self.count & 1)) && self.count > 0) {
-
+    if (self.count > 0) {
         // final hit before exploding or flying off
         if (
             self.count == 2 &&
@@ -125,23 +123,28 @@ void() DrillThink = {
             dmg = DRILL_MIN_DMG;
         }
 
-        T_Damage(self.buddy, self, self.trueowner, dmg);
-        relpos = self.origin - self.buddy.origin;
-        SpawnBlood(relpos + norm * 4, norm * 40, dmg);
-        vel = norm * 300 + [
-            random() * 40 - 20,
-            random() * 40 - 20,
-            0
-        ];
-        vel_z+= random() * 20 + 30;
-        if (self.buddy.maxs_x > VEC_HULL_MAX_x) {
-            ThrowGib("progs/gib3.mdl", vel);
-        } else {
-            ThrowGib("progs/zom_gib.mdl", vel);
-        }
-    }
+        SpawnBlood(self.origin + norm * 4, norm * 40, dmg);
 
-    if (self.count <= 0) {
+        // if even, deal damage
+        if (!(self.count & 1)) {
+
+            T_Damage(self.buddy, self, self.trueowner, dmg);
+            vel = norm * 300 + [
+                random() * 40 - 20,
+                random() * 40 - 20,
+                0
+            ];
+            vel_z+= random() * 20 + 30;
+            if (self.buddy.maxs_x > VEC_HULL_MAX_x) {
+                ThrowGib("progs/gib3.mdl", vel);
+            } else {
+                ThrowGib("progs/zom_gib.mdl", vel);
+            }
+        }
+
+        self.think = DrillThink;
+        self.nextthink = time + 0.1;
+    } else {
         if (self.buddy.health > 0) {
             other = self.buddy;
             T_MissileExplode();
@@ -159,9 +162,6 @@ void() DrillThink = {
             self.angles = vectoangles(-norm);
         }
 	    sound (self, CHAN_WEAPON, "misc/null.wav", 0, ATTN_NORM);
-    } else {
-        self.think = DrillThink;
-        self.nextthink = time + 0.1;
     }
 }
 
