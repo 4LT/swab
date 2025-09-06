@@ -105,6 +105,7 @@ void() T_DrillTouch = {
 
 void() DrillThink = {
     vector norm, relpos, vel;
+    float dmg;
     
     self.count-= 1;
     DrillOffsetPosition();
@@ -112,9 +113,21 @@ void() DrillThink = {
 
     // if even, deal damage
     if ((!(self.count & 1)) && self.count > 0) {
-        T_Damage(self.buddy, self, self.trueowner, self.dmg);
+
+        // final hit before exploding or flying off
+        if (
+            self.count == 2 &&
+            self.buddy.health >= DRILL_MIN_DMG &&
+            self.buddy.health <= DRILL_MAX_DMG
+        ) {
+            dmg = self.buddy.health + 1;
+        } else {
+            dmg = DRILL_MIN_DMG;
+        }
+
+        T_Damage(self.buddy, self, self.trueowner, dmg);
         relpos = self.origin - self.buddy.origin;
-        SpawnBlood(relpos + norm * 8, norm * 40, self.dmg);
+        SpawnBlood(relpos + norm * 4, norm * 40, dmg);
         vel = norm * 300 + [
             random() * 40 - 20,
             random() * 40 - 20,
@@ -132,7 +145,7 @@ void() DrillThink = {
         if (self.buddy.health > 0) {
             other = self.buddy;
             T_MissileExplode();
-            self.origin+= norm * 8;
+            self.origin+= norm * 4;
             BecomeExplosion();
         } else {
             // return to missile

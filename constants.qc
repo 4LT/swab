@@ -323,5 +323,8 @@ const float	MAX_AMMO_NAILS			= 200;
 const float	MAX_AMMO_ROCKETS		= 70;
 const float	MAX_AMMO_CELLS			= 100;
 
+const float DRILL_MIN_DMG = 15;
+const float DRILL_MAX_DMG = 50;
+
 //================================================
 
