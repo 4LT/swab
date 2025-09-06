@@ -142,7 +142,7 @@ static float() random_explosives = {
     if (random() < 0.5) {
         return 2;
     } else {
-        return set_drills(0, 2);
+        return add_rockets_drills(0, 2, 1);
     }
 }
 
@@ -226,7 +226,7 @@ void() BackpackAutoTouch =
 A forgotten explorer's backpack. Grants a paltry sum of shells and nails (about half a small pack of each). Grants armor instead of any ammo the player already has maxed.
 
 Flags:
-"big" doubles shells and nails, adds 2 rockets or drills, and 4 cells, appears red
+"big" doubles shells and nails, adds 2 rockets, maybe 1 drill, and 4 cells, appears red
     
 Keys:
 "target/2/3/4/k" - entity to trigger when picked up
@@ -241,7 +241,7 @@ Keys:
 "A forgotten explorer's backpack. Grants a paltry sum of shells and nails (about half a small pack of each). Grants armor instead of any ammo the player already has maxed."
 [
 	spawnflags(flags) =	[
-		1 : "Big (2x, red, +2 explosives/4 cells)" : 0
+		1 : "Big (2x, red, 2 rockets, 0-1 drills, 4 cells)" : 0
 	]
 ]
 */
