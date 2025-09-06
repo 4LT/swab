@@ -52,6 +52,10 @@ void() Cheat_Items =
 	W_SetCurrentAmmo();
 	W_Select(IT_ROCKET_LAUNCHER);
 
+    if (!(self.customflags & CFL_DACTIVE)) {
+        W_Select(IT_ROCKET_LAUNCHER);
+    }
+
 	stuffcmd(self,"bf\n");
 }
 
