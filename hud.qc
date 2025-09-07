@@ -657,7 +657,7 @@ void Hud_DrawModernRight(vector pos, float expanded)
 		Hud_DrawAmmo1(pos + '-96 -30');
 		Hud_DrawAmmo3(pos + '-96 -20');
 		Hud_DrawAmmo4(pos + '-96 -10');
-		pos += '0 -24';
+		pos += '0 -34';
 	}
 	
 	if (Hud_DrawKeys(pos + '-20 -16', IT_KEY1))
