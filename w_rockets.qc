@@ -111,7 +111,7 @@ void() DrillThink = {
     DrillOffsetPosition();
     norm = normalize(self.origin - center(self.buddy));
 
-    if (self.count > 0) {
+    if (self.count > 0 && self.buddy.health > 0) {
         // final hit before exploding or flying off
         if (
             self.count == 2 &&
@@ -147,8 +147,8 @@ void() DrillThink = {
     } else {
         if (self.buddy.health > 0) {
             other = self.buddy;
-            T_MissileExplode();
             self.origin+= norm * 4;
+            T_MissileExplode();
             BecomeExplosion();
         } else {
             // return to missile
@@ -157,6 +157,7 @@ void() DrillThink = {
             self.solid = SOLID_BBOX;
             self.type = "missile";
             self.velocity = self.speed * -norm;
+            self.oldvelocity = self.velocity;
             self.groundentity = world;
             self.flags = (~FL_ONGROUND) & self.flags;
             self.angles = vectoangles(-norm);
