@@ -104,6 +104,7 @@ void() T_DrillTouch = {
 }
 
 void() DrillThink = {
+    entity gib;
     vector norm, vel;
     float dmg;
     
@@ -135,10 +136,16 @@ void() DrillThink = {
                 0
             ];
             vel_z+= random() * 20 + 30;
-            if (self.buddy.maxs_x > VEC_HULL_MAX_x) {
-                ThrowGib("progs/gib3.mdl", vel);
-            } else {
-                ThrowGib("progs/zom_gib.mdl", vel);
+            gib = ThrowGib("progs/gib3.mdl", vel);
+
+            // change size of gibs on smaller or larger monsters
+            if (
+                self.buddy.maxs_x <= VEC_HULL_MAX_x
+                || self.buddy.classname == "monster_dog"
+            ) {
+                gib.scale = 0.65;
+            } else if (self.buddy.classname == "monster_shambler") {
+                gib.scale = 1.2;
             }
         }
 
