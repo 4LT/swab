@@ -392,6 +392,7 @@ float sandyMadeThis; // for special-casing SOMEBODY's stale keyvalues and clumsy
 .vector		oldvelocity;	// necessary for getting projectiles to pass through .notrace entities
 .entity		trueowner;		// now this is getting dumb
 .void(float unlock) lock;	// so entities can define their own target_lock cleanup
+.float      scale;
 
 // OVERLOADS:
 .float rand = healamount;	// for trigger_timer
