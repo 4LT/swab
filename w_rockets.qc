@@ -279,7 +279,13 @@ void() W_FireGrenade =
 	float base;
 	vector gvel;
 	
-	self.currentammo = self.ammo_rockets = self.ammo_rockets - 1;
+	self.ammo_rockets = add_rockets_drills(
+        self.ammo_rockets,
+        -1,
+        0
+    );
+    self.currentammo = get_rockets(self.ammo_rockets);
+
 	sound (self, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
 	self.punchangle_x = -2;
 

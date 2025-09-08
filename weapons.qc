@@ -129,7 +129,9 @@ float(float weap) W_HasAmmo =
 	if (weap == IT_NAILGUN)			return (self.ammo_nails >= 1);
 	if (weap == IT_SUPER_NAILGUN)	return (self.ammo_nails >= 2);
 	if (weap == IT_LIGHTNING)		return (self.ammo_cells >= 1);
-	if (weap == IT_GRENADE_LAUNCHER || weap == IT_ROCKET_LAUNCHER)
+	if (weap == IT_GRENADE_LAUNCHER)
+        return (get_rockets(self.ammo_rockets) >= 1);
+    if (weap == IT_ROCKET_LAUNCHER)
 		return (self.ammo_rockets >= 1);
 		
 	return FALSE;
@@ -237,7 +239,7 @@ void() W_ChangeWeapon =
 	else if (self.impulse == 6)
 	{
 		fl = IT_GRENADE_LAUNCHER;
-		if (self.ammo_rockets < 1)
+		if (get_rockets(self.ammo_rockets) < 1)
 			am = 1;
 	}
 	else if (self.impulse == 7)
