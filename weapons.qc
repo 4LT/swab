@@ -298,13 +298,32 @@ void() CycleWeaponCommand =
 {
 	float weap = self.weapon;
 	self.impulse = 0;
-	if (!weap)
-		weap = W_BestWeapon();
-	else do {
-		weap = W_Next(weap);
-		if (self.items & weap && W_HasAmmo(weap))
-			break;
-	} while (weap != self.weapon);
+
+    // Special case: rockets -> drills
+    if (
+        weap == IT_ROCKET_LAUNCHER
+        && (!(self.customflags & CFL_DACTIVE))
+        && get_drills(self.ammo_rockets) > 0
+    ) {
+        // do nothing here (select same weapon to swap to drills)
+    } else {
+        if (!weap)
+            weap = W_BestWeapon();
+        else do {
+            weap = W_Next(weap);
+            if (self.items & weap && W_HasAmmo(weap))
+                break;
+        } while (weap != self.weapon);
+
+        // Special case: drills -> rockets
+        if (
+            weap == IT_ROCKET_LAUNCHER
+            && (self.customflags & CFL_DACTIVE)
+            && get_rockets(self.ammo_rockets) > 0
+        ) {
+            W_Select(weap);
+        }
+    }
 	W_Select (weap);
 }
 
@@ -313,13 +332,32 @@ void() CycleWeaponReverseCommand =
 {
 	float weap = self.weapon;
 	self.impulse = 0;
-	if (!weap)
-		weap = W_BestWeapon();
-	else do {
-		weap = W_Prev(weap);
-		if (self.items & weap && W_HasAmmo(weap))
-			break;
-	} while (weap != self.weapon);
+
+    // Special case: drills -> rockets
+    if (
+        weap == IT_ROCKET_LAUNCHER
+        && (self.customflags & CFL_DACTIVE)
+        && get_rockets(self.ammo_rockets) > 0
+    ) {
+        // do nothing (select same weapon to swap to rockets)
+    } else {
+        if (!weap)
+            weap = W_BestWeapon();
+        else do {
+            weap = W_Prev(weap);
+            if (self.items & weap && W_HasAmmo(weap))
+                break;
+        } while (weap != self.weapon);
+
+        // Special case: rockets -> drills
+        if (
+            weap == IT_ROCKET_LAUNCHER
+            && (!(self.customflags & CFL_DACTIVE))
+            && get_drills(self.ammo_rockets) > 0
+        ) {
+            W_Select(weap);
+        }
+    }
 	W_Select (weap);
 }
 
