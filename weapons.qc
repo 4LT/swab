@@ -139,6 +139,12 @@ float(float weap) W_HasAmmo =
 
 float() W_BestWeapon =
 {
+	if (
+        self.items & (IT_ROCKET_LAUNCHER)
+        && W_HasAmmo(IT_ROCKET_LAUNCHER)
+        && self.weapon == IT_GRENADE_LAUNCHER
+    )
+		return IT_ROCKET_LAUNCHER;
 	if(self.items & (IT_SUPER_NAILGUN) && W_HasAmmo(IT_SUPER_NAILGUN))
 		return IT_SUPER_NAILGUN;
 	if(self.items & (IT_SUPER_SHOTGUN) && W_HasAmmo (IT_SUPER_SHOTGUN))
