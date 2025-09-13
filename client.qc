@@ -1542,24 +1542,24 @@ void() PlayerPreThink =
 		self.velocity = '0 0 0';
 
     if (
-        time > self.attack_finished &&
-        self.weapon == IT_ROCKET_LAUNCHER
+        time > self.attack_finished
     ) {
-        rockets = get_rockets(self.ammo_rockets);
-        drills = get_drills(self.ammo_rockets);
+        if (self.weapon == IT_ROCKET_LAUNCHER) {
+            rockets = get_rockets(self.ammo_rockets);
+            drills = get_drills(self.ammo_rockets);
 
-        if ((drills > 0) != (rockets > 0)) {
-            W_Select(IT_ROCKET_LAUNCHER);
+            if ((drills > 0) != (rockets > 0)) {
+                W_Select(IT_ROCKET_LAUNCHER);
+            }
+        }
+
+        if (
+            !W_HasAmmo(self.weapon) && 
+            self.weapon != IT_AXE
+        ) {
+            W_SelectBestWeapon();
         }
     }
-    
-    if (
-        time > self.attack_finished && 
-		!W_HasAmmo(self.weapon) && 
-		self.weapon != IT_AXE
-    ) {
-		W_SelectBestWeapon();
-	}
 
 	if (self.movetype == MOVETYPE_NOCLIP)
 	{
