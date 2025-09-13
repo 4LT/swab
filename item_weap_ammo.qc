@@ -550,7 +550,7 @@ void() item_rockets =
 	StartAmmo();
 }
 
-/*QUAKED item_drills (0 .5 .5) (0 0 0) (32 32 32) BIG ? SUSPENDED
+/*QUAKED item_drills (0 .5 .5) (-16 -16 0) (16 16 32) BIG ? SUSPENDED
 4 drills for the Rocket Launcher.
 
 Flags:
@@ -563,11 +563,11 @@ Keys:
 "count" - limit number of times to respawn
 */
 /*FGD
-@PointClass base(Ammo) 
+@PointClass base(Ammo) size(-16 -16 0, 16 16 32)
     model(
         {{
-            spawnflags & 1 ->   ":maps/b_rock1.bsp",
-                                ":maps/b_rock0.bsp"
+            spawnflags & 1 ->   ":progs/m_drill2.mdl",
+                                ":progs/m_drill1.mdl"
         }}
     ) =
     item_drills : "Drills, 4/8" []
@@ -578,16 +578,14 @@ void() item_drills =
 	if (self.spawnflags & ITEM_AMMO_BIG)
 	{
 		self.ammo_rockets = set_drills(0, 8);
-        // TODO: Set to new model
-		precache_model_safe ("progs/m_rock2.mdl");
-		setmodel (self, "progs/m_rock2.mdl");
+		precache_model_safe ("progs/m_drill2.mdl");
+		setmodel (self, "progs/m_drill2.mdl");
 	}
 	else
 	{
 		self.ammo_rockets = set_drills(0, 4);
-        // TODO: Set to new model
-		precache_model_safe ("progs/m_rock1.mdl");
-		setmodel (self, "progs/m_rock1.mdl");
+		precache_model_safe ("progs/m_drill1.mdl");
+		setmodel (self, "progs/m_drill1.mdl");
 	}
 	self.weapon = 3;
 	self.netname = "drill rockets";
