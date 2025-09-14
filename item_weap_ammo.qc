@@ -412,7 +412,14 @@ StartAmmo
 void() StartAmmo =
 {
 	self.type = "ammo";
-	setsize (self, '0 0 0', '32 32 56');
+
+    // HACK HACK HACK ARRRRRGH!
+    if (self.classname == "item_drills") {
+        setsize (self, '-16 -16 0', '16 16 56');
+    } else {
+        setsize (self, '0 0 0', '32 32 56');
+    }
+
 	self.touch = ammo_touch;
 	if (deathmatch == 1)
 		self.wait = 30;
