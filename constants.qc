@@ -137,6 +137,9 @@ const float	IT_ROCKET_LAUNCHER		= 32;
 const float	IT_LIGHTNING			= 64;
 const float	IT_WEAPONS				= 127 + 4096;
 
+const float IT_DRILLER              = 128; // Indicates whether drills have been
+                                           // picked up yet or not
+
 const float	IT_SHELLS				= 256;
 const float	IT_NAILS				= 512;
 const float	IT_ROCKETS				= 1024;

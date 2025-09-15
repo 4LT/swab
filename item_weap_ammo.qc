@@ -8,6 +8,26 @@ WEAPONS
 
 float	ITEM_AMMO_BIG = 1;
 
+void(entity e) UpgradeRocketLauncher = {
+    entity self_tmp;
+
+    if (e.items & IT_DRILLER) {
+        return;
+    }
+
+    self_tmp = self;
+    self = e;
+
+    self.items|= IT_DRILLER;
+
+    if (self.weapon == IT_ROCKET_LAUNCHER) {
+        W_Select(IT_ROCKET_LAUNCHER);
+    } else {
+        self.customflags|= CFL_DACTIVE;
+    }
+
+    self = self_tmp;
+}
 
 void(entity e) bound_ammo =
 {
@@ -374,6 +394,7 @@ void() ammo_touch =
                 0,
                 drills
             );
+            UpgradeRocketLauncher(other);
         } else {
             return;
         }
