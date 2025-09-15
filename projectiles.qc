@@ -481,7 +481,7 @@ entity(vector org, vector vel) launch_drill =
     missile.type = "missile";
     missile.avelocity = '0 0 2000';
 
-    SUB_ChangeModel(missile, "progs/missile.mdl");
+    SUB_ChangeModel(missile, "progs/drill.mdl");
 
     return missile;
 }

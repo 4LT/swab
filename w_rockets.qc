@@ -34,7 +34,9 @@ void(vector org, float rad) T_GibDownedZombies =
 
 void() T_ExplosiveTouch =
 {
-	if (other.classname == "monster_shambler")
+    if (self.classname == "drill")
+        BecomeDrillExplosion();
+    else if (other.classname == "monster_shambler")
 		BecomeWeakExplosion();
 	else
 		BecomeExplosion();
@@ -156,10 +158,10 @@ void() DrillThink = {
             other = self.buddy;
             self.origin+= norm * 4;
             T_MissileExplode();
-            BecomeExplosion();
+            BecomeDrillExplosion();
         } else {
             // return to missile
-            SUB_ChangeModel(self, "progs/missile.mdl");
+            SUB_ChangeModel(self, "progs/drill.mdl");
             self.movetype = MOVETYPE_FLYMISSILE;
             self.solid = SOLID_BBOX;
             self.type = "missile";

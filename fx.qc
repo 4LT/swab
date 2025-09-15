@@ -42,7 +42,7 @@ void()	s_explode6	=	[5,		SUB_Remove] {}
 void(float blasttype) BecomeBlast = 
 {
 	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-	if (blasttype == 1)
+	if (blasttype == 1 || blasttype == 3)
 		WriteByte (MSG_BROADCAST, TE_TAREXPLOSION);
 	else
 		WriteByte (MSG_BROADCAST, TE_EXPLOSION);
@@ -52,6 +52,8 @@ void(float blasttype) BecomeBlast =
 	
 	if (blasttype == 2)
 		setmodel (self, "progs/s_explo2.spr");
+    else if (blasttype == 3)
+		setmodel (self, "progs/s_drill_explode.spr");
 	else
 		setmodel (self, "progs/s_explod.spr");
 	
@@ -65,6 +67,7 @@ void(float blasttype) BecomeBlast =
 void() BecomeExplosion = { BecomeBlast(0); }
 void() BecomeTarExplosion = { BecomeBlast(1); }
 void() BecomeWeakExplosion = { BecomeBlast(2); }
+void() BecomeDrillExplosion = { BecomeBlast(3); }
 
 void() fx_explode =
 {

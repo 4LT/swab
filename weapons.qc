@@ -51,7 +51,7 @@ void() W_Precache =
 	precache_model ("progs/v_nail2.mdl");
 	precache_model ("progs/v_rock2.mdl");
 	precache_model ("progs/v_light.mdl");
-
+    precache_model ("progs/v_driller.mdl");
 }
 
 
@@ -435,9 +435,13 @@ void() W_ResetWeaponState =
 		self.weaponmodel = "progs/v_nail2.mdl";
 	else if (self.weapon == IT_GRENADE_LAUNCHER)
 		self.weaponmodel = "progs/v_rock.mdl";
-	else if (self.weapon == IT_ROCKET_LAUNCHER)
-		self.weaponmodel = "progs/v_rock2.mdl";
-	else if (self.weapon == IT_LIGHTNING)
+	else if (self.weapon == IT_ROCKET_LAUNCHER) {
+        if (self.customflags & CFL_DACTIVE) {
+            self.weaponmodel = "progs/v_driller.mdl";
+        } else {
+            self.weaponmodel = "progs/v_rock2.mdl";
+        }
+    } else if (self.weapon == IT_LIGHTNING)
 		self.weaponmodel = "progs/v_light.mdl";
 	else
 		self.weaponmodel = string_null;
